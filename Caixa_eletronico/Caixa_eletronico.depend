@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1745805702 source:c:\users\ruan\documents\codecodeblock\caixa_eletronico\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+
