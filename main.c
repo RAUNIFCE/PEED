@@ -1,14 +1,6 @@
-/******************************************************************************
-
-                            Online C Compiler.
-                Code, Compile, Run and Debug C program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
 #include <stdio.h>
-void dobrarvalores(int *vetor);
-invertervalores(int *vetor);
+void dobrarvalores(int *vetor,int tamvetor);
+void invertervalores(int *vetor,int tamvetor);
 int main()
 {
     int tamvetor=0;
@@ -19,19 +11,31 @@ int main()
         printf("digite o %dº número",i+1);
         scanf("%d",&vetor[i]);
     }
-    dobrarvalores(vetor);
+    dobrarvalores(vetor,tamvetor);
     invertervalores(vetor,tamvetor);
     return 0;
 }
-void dobrarvalores(int *vetor){
-    for(int i=0;i<3;i++){
+void dobrarvalores(int *vetor,int tamvetor){
+    printf("dobrando valores\n");
+    for(int i=0;i<tamvetor;i++){
         vetor[i]=vetor[i]*2;
         printf("%d\n",vetor[i]);
     }
 }
-invertervalores(int *vetor,int tamvetor){
-    for(int i=tamvetor-1;i>0;i--){
-        
-        printf("%d\n",vetor[i]);
+void invertervalores(int *n,int tamvetor){
+    printf("invertendo valores");
+    int metade=0;
+    
+        metade=tamvetor/2;
+        for(int i=0;i<metade;i++){
+        n[i]=n[i]^n[tamvetor-1-i];
+        n[tamvetor-1-i]=n[i]^n[tamvetor-1-i];
+        n[i]=n[i]^n[tamvetor-1-i];
+        }
+    
+    for(int i=0;i<tamvetor;i++){
+        printf("%d\n",n[i]);
     }
+    
+    
 }
