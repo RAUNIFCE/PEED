@@ -1,0 +1,57 @@
+
+
+#include <stdio.h>
+#include <stdbool.h>
+#define N 5
+int fila[N];
+int p=0;
+int u=0;
+bool fila_vazia(){
+    return p==u;
+}
+bool fila_cheia(){
+    return u ==N;
+}
+void enqueue(int valor){
+    if(fila_cheia()){
+        printf("Erro: fila cheia!\n");
+        return false;
+    }
+    fila[u++]=valor;
+    return true;
+}
+bool dequeue(){
+    if(fila_vazia()){
+        printf("Erro: fila vazia!\n");
+        return false;
+    }
+    int valor=fila[p++];
+    printf("Elemento removido: %d\n",valor);
+    return true;
+}
+void mostrar_fila(){
+  if(fila_vazia()){
+        printf("Erro: fila vazia!\n");
+        return;
+    }   
+    printf("fila: ");
+    for(int i=p;i<u;i++){
+        printf("%d ",fila[i]);
+        
+    }
+    printf("\n");
+}
+int main()
+{
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+    mostrar_fila();
+    dequeue();
+    mostrar_fila();
+    enqueue(40);
+    enqueue(50);
+    enqueue(60);
+    mostrar_fila();
+    
+}
