@@ -13,7 +13,7 @@ bool fila_vazia(){
 }
 bool fila_cheia(){
     //return (u+1) % N==p;
-    return size==u;
+    return size==N;
 }
 void enqueue(int valor){
     if(fila_cheia()){
@@ -37,14 +37,14 @@ bool dequeue(){
     return true;
 }
 void mostrar_fila(){
-  if(fila_vazia()){
-        printf("Erro: fila vazia!\n");
-        return;
-    }   
+     
     printf("fila: ");
-    for(int i=p;i!=u;i=(i+1)%N){
+    int count=0;
+    int i=p;
+    while(count<size){
         printf("%d ",fila[i]);
-        
+        i=(i+1)%N;
+        count++;
     }
     printf("\n");
 }
@@ -53,17 +53,20 @@ int main()
     enqueue(10);
     enqueue(20);
     enqueue(30);
+    enqueue(40);
     mostrar_fila();
+    dequeue();
+    enqueue(50);
     dequeue();
     dequeue();
     dequeue();
     
     mostrar_fila();
-    enqueue(40);
-    enqueue(50);
-    enqueue(60);
-    enqueue(60);
-    enqueue(60);
+    enqueue(100);
+    enqueue(110);
+    enqueue(120);
+    enqueue(130);
+    enqueue(140);
     mostrar_fila();
     
 }
