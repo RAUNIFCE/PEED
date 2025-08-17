@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct No {
+    int ficha;
+    int idade;
+    char* nome;
+    struct No* proximo;
+    struct No* anterior;
+} No;
+//variaveis globais
+No*  fila = NULL;
+No* fila_prioritaria = NULL;
+int ficha=1;
+int fichap=1;
+
+
+void menu() {
+    printf("Digite a opção desejada \n1-inserir na fila\n2-retirar da fila\n3-ver a situação das duas filas\n");
+    int opc;
+    scanf("%d",&opc);
+    if(opc==1){
+        int idade,senha;
+        printf("insira a idade\n");
+        scanf("%d",&idade);
+        if(idade<60){
+        senha=ficha;
+        ficha++;
+        inserirnafila(&fila,senha,idade);    
+        }
+        else{
+            senha=fichap;
+            fichap++;
+            inserirnafila(&fila_prioritaria,senha,idade);
+        }
+        
+    }
+    if(opc==2){
+       if(fila_prioritaria==NULL){
+           removerdafila(&fila);
+       } 
+       else{
+           removerdafila(&fila_prioritaria);
+       }
+    }
+    if(opc==3){
+       exibir(fila,fila_prioritaria); 
+    }
+}
+void inserirnafila(No** inicio,int ficha,int idade){
+    No* novo=(No*)malloc(sizeof(No));
+    novo->ficha=ficha;
+    novo->idade=idade;
+    novo->anterior=NULL;
+    novo->proximo=NULL;
+    
+    novo->nome = (char*)malloc(100 * sizeof(char));
+    printf("Digite o nome: ");
+    getchar();
+    fgets(novo->nome, 50, stdin);
+    novo->nome[strcspn(novo->nome, "\n")] = '\0';
+    
+    if (*inicio == NULL) {
+        novo->anterior = NULL;
+        *inicio = novo;
+        return menu();
+    }
+    No* temp = *inicio;
+    while (temp->proximo != NULL)
+        temp = temp->proximo;
+
+    temp->proximo = novo;
+    novo->anterior = temp;
+    return menu();
+}
+void removerdafila(No** fila) {
+    if (*fila == NULL) {
+        printf("fila vazia!\n");
+        return menu();
+    }
+    No* temp = *fila;
+    *fila = temp->proximo;
+    if(*fila !=NULL){
+    (*fila)->anterior=NULL;
+    }
+    free(temp);
+    menu();
+}
+void exibir(No* fila,No* filap) {
+    printf("\nFila normal -> ");
+    while (fila != NULL) {
+        printf("%s -> ", fila->nome);
+        fila = fila->proximo;
+    }
+    printf("Fim");
+    printf("\nfila prioritária -> ");
+    
+    while (filap != NULL) {
+        printf("%s -> ", filap->nome);
+        filap = filap->proximo;
+    }
+    printf("Fim");
+    printf("\nDigite qualquer coisa pra sair\n");
+    char x;
+    scanf(" %c",&x);
+    menu();
+}
+int main()
+{
+   
+    
+    menu();
+
+    printf("Hello World");
+
+    return 0;
+}
