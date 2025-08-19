@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+typedef struct No{
+    int dado;
+    struct No *prox;
+}No;
+
+No *topo=NULL;
+
+bool pilhaVazia(){
+    return topo ==NULL;
+}
+void push(int dado){
+    No* novo=(No*)malloc(sizeof(No));
+    novo->dado=dado;
+    novo->prox = topo;
+    topo = novo;
+    
+}
+int pop(){
+    if(pilhaVazia()){
+        printf("Pilha Vazia\n");
+        exit(1);
+    }
+    No* aux = topo;
+    topo = aux->prox;
+    int valor =aux-> dado;
+    free(aux);
+    return valor;
+}
+void exibir(No* topo) {
+    while (topo != NULL) {
+        printf("%d -> ", topo->dado);
+        topo = topo->prox;
+    }
+    printf("NULL\n");
+    
+}
+void somar(){
+    int soma=0;
+    
+    while(topo!=NULL){
+    soma+=topo->dado;
+    pop();
+    }
+    printf("%d \n",soma);
+    return;
+}
+// Função principal para demonstrar o uso da pilha
+int main() {
+    int opc;
+    do{
+        printf("Digite a opção desejada \n1-inserir na calculadora\n2-Desfazer acao\n3-exibir\n4-somar tudo e finalizar \n");
+        scanf("%d",&opc);
+        if(opc==1){
+            int num;
+            printf("\nDigite o número\n");
+            scanf("%d",&num);
+            push(num);
+        }
+        if(opc==2){
+            pop();
+        }
+        if(opc==3){
+            exibir(topo);
+        }
+        if(opc==4){
+            somar();
+        }    
+        
+    }while(opc!=5);
+    
+    
+   
+   
+    
+    return 0;
+}
