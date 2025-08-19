@@ -1,0 +1,40 @@
+
+
+#include <stdio.h>
+
+typedef struct No{
+    int dado;
+    struct No *esq,*dir;
+}No;
+
+No* CriarNo(int num){
+    No* novo(No*)malloc(sizeof(No));
+    if(!novo){
+        printf("Erro ao criar Nó\n");
+        exit(1);
+    }
+    novo->dado=num;
+    novo->esq=NULL;
+    novo->dir=NULL;
+    return novo;
+}
+void inserir(No **raiz,int num){
+   if(*raiz==NULL){
+       *raiz=criarNo(num);
+       
+   } 
+    if(num<(*raiz)->dado){
+        inserir(&((*raiz)->esq),num);
+    }
+    else if(num>(*raiz)->dado){
+        inserir(&((*raiz)->dir),num);
+    }
+}
+
+int main()
+{
+    No *raiz=NULL;
+    inserir(&raiz,10)
+
+    return 0;
+}
