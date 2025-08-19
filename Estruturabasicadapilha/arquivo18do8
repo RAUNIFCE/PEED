@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+typedef struct No{
+    int dado;
+    struct No *prox;
+}No;
+
+No *topo=NULL;
+
+bool pilhaVazia(){
+    return topo ==NULL;
+}
+void push(No** topo,int dado){
+    No* novo=(No*)malloc(sizeof(No));
+    novo->dado=dado;
+    novo->prox = *topo;
+    *topo = novo;
+}
+int pop(){
+    if(pilhaVazia()){
+        printf("Pilha Vazia\n");
+        exit(1);
+    }
+    No* aux = topo;
+    topo = aux->dado;
+    int valor =aux-> dado;
+    free(aux);
+    return valor;
+}
+void exibir(No* topo) {
+    while (topo != NULL) {
+        printf("%d -> ", topo->dado);
+        topo = topo->prox;
+    }
+    printf("NULL\n");
+}
+
+// Função principal para demonstrar o uso da pilha
+int main() {
+    
+    
+    
+    // Empilha alguns caracteres
+    printf("Empilhando A, B, C...\n");
+    push(&topo,1);
+    push(&topo,2);
+    push(&topo,3);
+    exibir(topo);
+    pop();
+    exibir(topo);
+   
+    
+    return 0;
+}
