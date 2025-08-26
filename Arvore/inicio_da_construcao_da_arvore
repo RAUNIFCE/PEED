@@ -1,5 +1,5 @@
 
-
+#include <stdlib.h>
 #include <stdio.h>
 
 typedef struct No{
@@ -8,7 +8,7 @@ typedef struct No{
 }No;
 
 No* CriarNo(int num){
-    No* novo(No*)malloc(sizeof(No));
+    No* novo=(No*)malloc(sizeof(No));
     if(!novo){
         printf("Erro ao criar Nó\n");
         exit(1);
@@ -20,8 +20,8 @@ No* CriarNo(int num){
 }
 void inserir(No **raiz,int num){
    if(*raiz==NULL){
-       *raiz=criarNo(num);
-       
+       *raiz=CriarNo(num);
+       return;
    } 
     if(num<(*raiz)->dado){
         inserir(&((*raiz)->esq),num);
@@ -30,11 +30,20 @@ void inserir(No **raiz,int num){
         inserir(&((*raiz)->dir),num);
     }
 }
-
+void em_ordem(No*raiz){
+    if(!raiz) return;
+    em_ordem(raiz->esq);
+    printf("%d ",raiz->dado);
+    em_ordem(raiz->dir);
+    
+}
 int main()
 {
     No *raiz=NULL;
-    inserir(&raiz,10)
+    inserir(&raiz,10);
+    inserir(&raiz,15);
+    inserir(&raiz,5);
+    em_ordem(raiz);
 
     return 0;
 }
