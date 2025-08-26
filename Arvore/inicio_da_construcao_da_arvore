@@ -37,13 +37,35 @@ void em_ordem(No*raiz){
     em_ordem(raiz->dir);
     
 }
+void pre_ordem(No*raiz){
+    if(!raiz) return;
+    printf("%d ",raiz->dado);
+    pre_ordem(raiz->esq);
+   
+    pre_ordem(raiz->dir);
+    
+}
+void pos_ordem(No*raiz){
+    if(!raiz) return;
+    
+    pos_ordem(raiz->esq);
+   
+    pos_ordem(raiz->dir);
+    printf("%d ",raiz->dado);
+}
 int main()
 {
     No *raiz=NULL;
     inserir(&raiz,10);
     inserir(&raiz,15);
     inserir(&raiz,5);
+    inserir(&raiz,2);
+    inserir(&raiz,7);
+    inserir(&raiz,20);
     em_ordem(raiz);
-
+    printf("\n");
+    pre_ordem(raiz);
+    printf("\n");
+    pos_ordem(raiz);
     return 0;
 }
