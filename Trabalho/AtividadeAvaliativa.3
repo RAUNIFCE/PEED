@@ -1,0 +1,204 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <string.h>
+
+typedef struct Livro {
+    char isbn[14];       // Formato: 978-85-359-9999-9
+    char titulo[100];
+    char autor[50];
+    int ano_publicacao;
+    int disponivel;      // 1 para disponível, 0 para emprestado
+} Livro;
+
+typedef struct NoAVL {
+    Livro *livro;
+    struct NoAVL* esq;
+    struct NoAVL* dir;
+    int altura;
+} NoAVL;
+
+void exibir(NoAVL* raiz){
+    if(!raiz) return; 
+    printf(" %s -> \n", raiz->livro->isbn);
+    exibir(raiz->esq);
+    exibir(raiz->dir);
+}
+
+int maior(int a,int b){
+    return (a>b)? a:b;
+}
+
+int alturaNo(NoAVL *no){
+    return (no == NULL) ? 0 : no->altura;
+}
+
+int fbalanceamento(NoAVL *no){
+    return (no == NULL) ? 0 : alturaNo(no->esq) - alturaNo(no->dir);
+}
+
+// Rotação simples à direita
+void Rd(NoAVL **a){
+    if (*a == NULL || (*a)->esq == NULL) return;
+
+    NoAVL* b = (*a)->esq;
+    NoAVL* c = b->dir;
+
+    b->dir = *a;
+    (*a)->esq = c;
+
+    (*a)->altura = 1 + maior(alturaNo((*a)->esq), alturaNo((*a)->dir));
+    b->altura = 1 + maior(alturaNo(b->esq), alturaNo(b->dir));
+
+    *a = b;
+}
+
+// Rotação simples à esquerda
+void Re(NoAVL **a){
+    if (*a == NULL || (*a)->dir == NULL) return;
+
+    NoAVL* b = (*a)->dir;
+    NoAVL* c = b->esq;
+
+    b->esq = *a;
+    (*a)->dir = c;
+
+    (*a)->altura = 1 + maior(alturaNo((*a)->esq), alturaNo((*a)->dir));
+    b->altura = 1 + maior(alturaNo(b->esq), alturaNo(b->dir));
+
+    *a = b;
+}
+
+NoAVL* inserirlivro(NoAVL** raiz, Livro *livro){
+    if (*raiz == NULL) {
+        *raiz  = (NoAVL*)malloc(sizeof(NoAVL));
+        (*raiz)->livro = livro;
+        (*raiz)->esq = NULL;
+        (*raiz)->dir = NULL;
+        (*raiz)->altura = 1;
+        return *raiz;
+    }
+
+    if(strcmp(livro->isbn, (*raiz)->livro->isbn) < 0){
+        (*raiz)->esq = inserirlivro(&((*raiz)->esq), livro);
+    }
+    else if(strcmp(livro->isbn, (*raiz)->livro->isbn) > 0){
+        (*raiz)->dir = inserirlivro(&((*raiz)->dir), livro);
+    }
+    else{
+        return *raiz; // ISBN igual, não insere
+    }
+
+    // Atualiza altura
+    (*raiz)->altura = 1 + maior(alturaNo((*raiz)->esq), alturaNo((*raiz)->dir));
+
+    // Verifica balanceamento
+    int fb = fbalanceamento(*raiz);
+
+    // Caso LL
+    if (fb > 1 && strcmp(livro->isbn, (*raiz)->esq->livro->isbn) < 0) {
+        Rd(raiz);
+        return *raiz;
+    }
+
+    // Caso RR
+    if (fb < -1 && strcmp(livro->isbn, (*raiz)->dir->livro->isbn) > 0) {
+        Re(raiz);
+        return *raiz;
+    }
+
+    // Caso LR
+    if (fb > 1 && strcmp(livro->isbn, (*raiz)->esq->livro->isbn) > 0) {
+        Re(&((*raiz)->esq));
+        Rd(raiz);
+        return *raiz;
+    }
+
+    // Caso RL
+    if (fb < -1 && strcmp(livro->isbn, (*raiz)->dir->livro->isbn) < 0) {
+        Rd(&((*raiz)->dir));
+        Re(raiz);
+        return *raiz;
+    }
+
+    return *raiz;
+}
+
+Livro* gerarLivro(char* isbn,char* titulo,char* autor,int ano_publicacao,int disponivel){
+    Livro* novo=(Livro*)malloc(sizeof(Livro));
+    if(!novo){
+        printf("Erro ao criar Nó\n");
+        exit(1);
+    }
+
+    strcpy(novo->isbn, isbn);
+    strcpy(novo->titulo, titulo);
+    strcpy(novo->autor, autor);
+    novo->ano_publicacao = ano_publicacao;
+    novo->disponivel = disponivel;
+
+    printf("\nLivro inserido com sucesso!\n");
+    printf("---------------------------------\n");
+    printf(" ISBN:           %s\n", novo->isbn);
+    printf(" Título:         %s\n", novo->titulo);
+    printf(" Autor:          %s\n", novo->autor);
+    printf(" Ano:            %d\n", novo->ano_publicacao);
+    printf(" Disponível:     %s\n", novo->disponivel ? "Sim" : "Não");
+    printf("---------------------------------\n");
+
+    return novo;
+}
+
+int main() {
+    setlocale(LC_ALL,"portuguese" );
+    NoAVL *raiz=NULL;
+    int opc;
+
+    do {
+        printf("\nDigite a opção desejada:\n");
+        printf("1 - Inserir livro\n");
+        printf("2 - Desfazer ação\n");
+        printf("3 - Exibir\n");
+        printf("4 - Finalizar\n");
+        scanf("%d",&opc);
+        getchar();
+
+        if(opc==1){
+            char isbn[14],titulo[100],autor[50];
+            int ano,disponivel;
+
+            printf("Digite a isbn do livro:\n");
+            fgets(isbn,14,stdin);
+            isbn[strcspn(isbn, "\n")] = '\0';
+
+            printf("Digite o titulo do livro:\n");
+            fgets(titulo,100,stdin);
+            titulo[strcspn(titulo, "\n")] = '\0';
+
+            printf("Digite o autor do livro:\n");
+            fgets(autor,50,stdin);
+            autor[strcspn(autor, "\n")] = '\0';
+
+            do {
+                printf("Digite o ano do livro:\n");
+                scanf("%d", &ano);
+            } while (ano < 0);
+
+            do {
+                printf("Digite 1 se está disponível ou 0 se está emprestado:\n");
+                scanf("%d", &disponivel);
+            } while (disponivel < 0 || disponivel > 1);
+            getchar();
+
+            Livro* livro = gerarLivro(isbn,titulo,autor,ano,disponivel);
+            raiz = inserirlivro(&raiz, livro);
+            printf("Livro inserido na árvore!\n");
+        }
+        if(opc==3){
+            printf("\nTodas as ISBNs dos livros:\n");
+            exibir(raiz);
+        }
+    } while(opc != 4);
+
+    return 0;
+}
